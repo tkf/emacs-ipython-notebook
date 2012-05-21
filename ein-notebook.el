@@ -866,6 +866,49 @@ NAME is any non-empty string that does not contain '/' or '\\'."
   (ein:notebook-save-notebook ein:notebook 0))
 
 
+;;; Pygments
+
+(defun ein:pygmentize (cell &optional lexer)
+  (unless lexer (setq lexer "python"))
+  (let* ((input-node (ein:cell-element-get cell :input))
+         (ewoc (oref cell :ewoc))
+         ;; 1+/1- is for skipping newline
+         (beg (1+ (ewoc-location input-node)))
+         (end (1- (ewoc-location (ewoc-next ewoc input-node)))))
+    (save-excursion
+      ;; probably it is better to set :input and update via ewoc?
+      (shell-command-on-region
+       beg end
+       (format "pygmentize -l %s -O %s"
+               lexer (if (eql frame-background-mode 'dark)
+                         ;; Sounds opposite, but works this way.
+                         "bg=light"
+                       "bg=dark"))
+       ;; (format "pygmentize -l %s -f terminal256 -O %s"
+       ;;         lexer (if (eql frame-background-mode 'dark)
+       ;;                   "bg=dark"
+       ;;                 "style=monokai,bg=light"))
+       nil t)
+      (let ((beg (1+ (ewoc-location input-node)))
+            (end (1- (ewoc-location (ewoc-next ewoc input-node)))))
+        (ansi-color-apply-on-region beg end)))))
+
+;; Try it like this:
+;;    (ein:pygmentize (ein:notebook-get-current-cell))
+
+;; This function has some catches:
+;; * It moves the current pointer to the head of input area.
+;; * It inserts newline at the end.  This is easy to fix.
+;; * It is time consuming.  If I am going to use it seriously,
+;;   maybe I need to make pygmentize a server process.
+;;   Or I can invoke this asynchronously using idle timer
+;;   (like fymake) so it won't block user commands.
+
+;; Resources:
+;; * http://pygments.org/docs/cmdline/
+;; * http://pygments.org/docs/formatters/
+
+
 ;;; Notebook mode
 
 (defvar ein:notebook-modes
