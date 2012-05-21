@@ -344,16 +344,19 @@ Called from ewoc pretty printer via `ein:cell-pp'."
 (defmethod ein:cell-insert-input ((cell ein:basecell))
   "Insert input of the CELL in the buffer.
 Called from ewoc pretty printer via `ein:cell-pp'."
-  ;; Newlines must allow insertion before/after its position.
-  (insert (propertize "\n" 'read-only t 'rear-nonsticky t)
-          (propertize (or (ein:oref-safe cell :input) "")
-                      'font-lock-face 'ein:cell-input-area
-                      'insert-in-front-hooks
-                      '(ein:cell-input-area-insert-in-front-callback))
-          (propertize "\n" 'read-only t
-                      'font-lock-face 'ein:cell-input-area
-                      'insert-in-front-hooks
-                      '(ein:cell-input-area-insert-in-front-callback))))
+  (let ((add-props
+         (cond
+          ;; When using `ein:notebook-plain-mode', set face to
+          ;; highlight background.
+          ((eql major-mode 'ein:notebook-plain-mode)
+           '(font-lock-face
+             ein:cell-input-area
+             insert-in-front-hooks
+             (ein:cell-input-area-insert-in-front-callback))))))
+    ;; Newlines must allow insertion before/after its position.
+    (insert (propertize "\n" 'read-only t 'rear-nonsticky t)
+            (apply #'propertize (or (ein:oref-safe cell :input) "") add-props)
+            (apply #'propertize "\n" 'read-only t add-props))))
 
 (defun ein:cell-input-area-insert-in-front-callback (start end)
   (put-text-property start end
