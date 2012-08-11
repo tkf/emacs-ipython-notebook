@@ -185,6 +185,12 @@ This is the same workaround as `ein:ac-setup-maybe'."
 (add-hook 'ein:notebook-mumamo-mode-hook
           'ein:mumamo-indent-line-function-workaround-turn-on)
 
+;; Mark `ac-sources' permanent local for MuMaMo buffer.
+;; Cleaner way is to make `mumamo-per-buffer-local-vars' buffer local
+;; and add `ac-sources' to it in `ein:notebook-mumamo-mode-hook'.
+;; But keep it simple for now.
+(mumamo-make-variable-buffer-permanent 'ac-sources)
+
 
 
 ;;; Chunk functions
