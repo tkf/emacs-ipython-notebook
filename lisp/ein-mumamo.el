@@ -186,10 +186,11 @@ This is the same workaround as `ein:ac-setup-maybe'."
           'ein:mumamo-indent-line-function-workaround-turn-on)
 
 ;; Mark `ac-sources' permanent local for MuMaMo buffer.
-;; Cleaner way is to make `mumamo-per-buffer-local-vars' buffer local
-;; and add `ac-sources' to it in `ein:notebook-mumamo-mode-hook'.
+;; Cleaner way is to make `mumamo-per-main-major-local-vars'
+;; (permanent?) buffer local and add `ac-sources' to it in
+;; `ein:notebook-mumamo-mode-hook'.
 ;; But keep it simple for now.
-(mumamo-make-variable-buffer-permanent 'ac-sources)
+(add-to-list 'mumamo-per-main-major-local-vars 'ac-sources)
 
 
 

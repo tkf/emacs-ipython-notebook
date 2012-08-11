@@ -159,11 +159,15 @@ dotty completion."
   "Install auto-complete-mode for notebook modes.
 Specifying non-`nil' to SUPERPACK enables richer auto-completion
 \(see `ein:ac-superpack')."
-  (add-hook 'ein:notebook-mumamo-mode-hook 'ein:ac-setup)
+  (add-hook 'ein:notebook-bg-mode-hook 'ein:ac-setup)  ; [#hook]_
   (add-hook 'ein:notebook-python-mode-hook 'ein:ac-setup)
   (add-hook 'ein:notebook-plain-mode-hook 'ein:ac-setup)
   (when superpack
     (ein:ac-superpack)))
+
+;; .. [#hook] main major mode in MuMaMo.  `ac-sources' is
+;;    "distributed" to each chunks using the mechanism of
+;;    `mumamo-per-main-major-local-vars'.
 
 
 (defvar ein:ac-config-once-called nil)
