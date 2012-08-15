@@ -1613,7 +1613,7 @@ It should be possible to support python-mode.el.  Patches are welcome!
              ;; python.el makes dedicated process when
              ;; `buffer-file-name' has some value.
              (buffer-file-name (buffer-name)))
-        (run-python t (python-shell-parse-command))
+        (run-python (python-shell-parse-command) t)
         (python-shell-switch-to-shell))
     (ein:log 'warn "python.el is not loaded!")))
 
