@@ -128,8 +128,18 @@ pair of TO-PYTHON and FROM-PYTHON."
 
 ;;; Configuration getter
 
+(defun ein:url-or-port-real (alias-or-real)
+  "Convert ALIAS-OR-REAL to the real URL or port."
+  (assoc-default alias-or-real ein:url-or-port nil alias-or-real))
+
+(defun ein:car-or-it (x) (or (car-safe x) x))
+(defun ein:cdr-or-it (x) (or (cdr-safe x) x))
+
+(defun ein:url-or-port-or-alias-list ()
+  (mapcar #'ein:car-or-it ein:url-or-port))
+
 (defun ein:default-url-or-port ()
-  (or ein:default-url-or-port (car ein:url-or-port) 8888))
+  (or ein:default-url-or-port (ein:cdr-or-it (car ein:url-or-port)) 8888))
 
 
 
