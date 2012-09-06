@@ -53,7 +53,20 @@
   "List of default url-or-port values.
 This will be used for completion. So put your IPython servers.
 You can connect to servers not in this list \(but you will need
-to type every time)."
+to type every time).
+
+This also can be an alist where `car' of each element is a name
+of the server and `cdr' is URL or port.  For example::
+
+  (setq ein:url-or-port-aliases
+        '((default     . 8888)
+          (dev         . 8889)
+          (test-server . 8890)
+          (external    . \"http://...\")))
+
+You can use these aliases in `ein:default-url-or-port',
+`ein:filename-translations', `ein:console-args' and
+`ein:connect-reload-command'."
   :type '(repeat (choice (integer :tag "Port number" 8888)
                          (string :tag "URL" "http://127.0.0.1:8888")))
   :group 'ein)
