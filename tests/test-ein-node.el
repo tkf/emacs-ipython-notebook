@@ -23,6 +23,7 @@
                          (ein:node-new nil "m" '(spam))
                          (ein:node-new nil "g" '(egg))))
           (ein:node-debug t))
+      (should (eq (ewoc-data (car en-list)) (car en-list)))
       (should (equal (mapcar #'ein:$node-data
                              (ein:node-filter en-list :is 'spam))
                      '("s" "p" "a" "m")))
@@ -43,6 +44,7 @@
                          (ein:node-new nil "m" '(spam))
                          (ein:node-new nil "g" '(egg))))
           (ein:node-debug t))
+      (should (eq (ewoc-data (car en-list)) (car en-list)))
       (should (equal (mapcar #'ein:$node-data
                              (ein:node-filter en-list :not 'spam))
                      '("e" "g" "g")))
@@ -63,6 +65,7 @@
                          (ein:node-new nil "m" '(spam))
                          (ein:node-new nil "g" '(egg))))
           (ein:node-debug t))
+      (should (eq (ewoc-data (car en-list)) (car en-list)))
       (should (equal (mapcar #'ein:$node-data
                              (ein:node-filter en-list :not 'spam :is 'sag))
                      '("g")))
