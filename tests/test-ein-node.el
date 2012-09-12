@@ -8,6 +8,11 @@
   `(flet ((ewoc-data (x) x))
      ,@body))
 
+(ert-deftest ein:ewoc-mock-test ()
+  (eintest:with-ewoc-mock
+    (let ((obj "some-object"))
+      (should (eq (ewoc-data obj) obj)))))
+
 (ert-deftest ein:node-filter-is ()
   (eintest:with-ewoc-mock
     (let ((en-list (list (ein:node-new nil "s" '(spam sag))
@@ -16,7 +21,8 @@
                          (ein:node-new nil "a" '(spam sag))
                          (ein:node-new nil "g" '(egg sag))
                          (ein:node-new nil "m" '(spam))
-                         (ein:node-new nil "g" '(egg)))))
+                         (ein:node-new nil "g" '(egg))))
+          (ein:node-debug t))
       (should (equal (mapcar #'ein:$node-data
                              (ein:node-filter en-list :is 'spam))
                      '("s" "p" "a" "m")))
@@ -35,7 +41,8 @@
                          (ein:node-new nil "a" '(spam sag))
                          (ein:node-new nil "g" '(egg sag))
                          (ein:node-new nil "m" '(spam))
-                         (ein:node-new nil "g" '(egg)))))
+                         (ein:node-new nil "g" '(egg))))
+          (ein:node-debug t))
       (should (equal (mapcar #'ein:$node-data
                              (ein:node-filter en-list :not 'spam))
                      '("e" "g" "g")))
@@ -54,7 +61,8 @@
                          (ein:node-new nil "a" '(spam sag))
                          (ein:node-new nil "g" '(egg sag))
                          (ein:node-new nil "m" '(spam))
-                         (ein:node-new nil "g" '(egg)))))
+                         (ein:node-new nil "g" '(egg))))
+          (ein:node-debug t))
       (should (equal (mapcar #'ein:$node-data
                              (ein:node-filter en-list :not 'spam :is 'sag))
                      '("g")))
