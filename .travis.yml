@@ -7,6 +7,9 @@ before_install:
       sudo apt-get install -qq
           emacs-snapshot-el emacs-snapshot-gtk emacs-snapshot;
     fi
+  - if [ "$EMACS" = "emacs" ]; then
+      sudo apt-get install -y emacs;
+    fi
 env:
   - EMACS=emacs
   - EMACS=emacs-snapshot
