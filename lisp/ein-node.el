@@ -51,11 +51,17 @@
 (defun ein:node-has-class (node class)
   (memq class (ein:$node-class node)))
 
+(defvar ein:node-debug nil)
+
 (defun ein:node-filter (ewoc-node-list &rest args)
   (loop for (key . class) in (ein:plist-iter args)
+        do (when ein:node-debug
+             (message "ewoc-node-list %S" ewoc-node-list))
         do (setq ewoc-node-list
                  (loop for ewoc-node in ewoc-node-list
                        for node = (ewoc-data ewoc-node)
+                       do (when ein:node-debug
+                            (message "node %S ewoc-node %S" node ewoc-node))
                        when (case key
                               (:is (ein:node-has-class node class))
                               (:not (not (ein:node-has-class node class)))
