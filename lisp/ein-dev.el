@@ -181,8 +181,13 @@ callback (`websocket-callback-debug-on-error') is enabled."
    "EIN system info"
    :emacs-version (emacs-version)
    :image-types (ein:eval-if-bound 'image-types)
-   :image-types-available (ein:filter #'image-type-available-p
-                                      (ein:eval-if-bound 'image-types))
+   :image-types-available
+   (ein:filter
+    #'image-type-available-p
+    (delete-dups
+     (append
+      (ein:eval-if-bound 'image-types)
+      '(svg imagemagick png gif tiff jpeg xpm postscript xbm pbm))))
    :lib (mapcar #'ein:dev-sys-info--lib
                 '("websocket" "auto-complete" "mumamo"
                   "auto-complete" "popup" "fuzzy" "pos-tip"
