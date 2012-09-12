@@ -483,15 +483,6 @@ Use `ein:log' for debugging and logging."
           list-name-callback))
 
 
-;;; Emacs compatibility
-
-(defalias 'ein:flet (if (or (> emacs-major-version 24)
-                            (and (= emacs-major-version 24)
-                                 (> emacs-minor-version 1)))
-                        'cl-flet
-                      'flet))
-
-
 ;;; utils.js compatible
 
 (defun ein:utils-uuid ()

@@ -5,7 +5,7 @@
 
 (defmacro eintest:with-ewoc-mock (&rest body)
   (declare (indent 0))
-  `(ein:flet ((ewoc-data (x) x))
+  `(flet ((ewoc-data (x) x))
      ,@body))
 
 (ert-deftest ein:ewoc-mock-test ()
