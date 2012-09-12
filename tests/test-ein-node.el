@@ -9,9 +9,11 @@
      ,@body))
 
 (ert-deftest ein:ewoc-mock-test ()
-  (eintest:with-ewoc-mock
-    (let ((obj "some-object"))
-      (should (eq (ewoc-data obj) obj)))))
+  (let ((test (lambda ()
+                (let ((obj "some-object"))
+                  (should (eq (ewoc-data obj) obj))))))
+    (eintest:with-ewoc-mock
+      (funcall test))))
 
 (ert-deftest ein:node-filter-is ()
   (eintest:with-ewoc-mock
