@@ -1,3 +1,5 @@
+EMACS = emacs
+
 testein-default:
 	./testein.py --clean-elc --load-ert
 
@@ -16,12 +18,13 @@ interactive-testein-24:
 
 ert-compile: ert-clean
 	cd lib/ert/lisp/emacs-lisp/ && \
-		emacs -Q -L . -batch -f batch-byte-compile *.el
+		$(EMACS) -Q -L . -batch -f batch-byte-compile *.el
 
 ert-clean:
 	rm -f lib/ert/lisp/emacs-lisp/*.elc
 
 travis-ci: ert-compile
-	./testein.py --no-func-test --clean-elc --load-ert
-	cat test-load_log_batch_emacs.log
-	cat test-load_messages_batch_emacs.log
+	$(EMACS) --version
+	python --version
+	./testein.py --no-func-test --clean-elc -e $(EMACS)
+	tail -n3 test-load_messages_batch_$(EMACS).log
