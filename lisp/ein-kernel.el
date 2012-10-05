@@ -167,7 +167,7 @@
 (defun ein:kernel-send-cookie (channel)
   ;; This is required to open channel.  In IPython's kernel.js, it sends
   ;; `document.cookie'.  This is an empty string anyway.
-  (ein:websocket-send channel ""))
+  (ein:websocket-send channel " "))
 
 
 (defun ein:kernel--ws-closed-callback (websocket kernel arg)
