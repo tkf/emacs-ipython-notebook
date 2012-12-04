@@ -104,15 +104,19 @@
 
 (defun ein:kernel-start (kernel notebook-id)
   "Start kernel of the notebook whose id is NOTEBOOK-ID."
-  (unless (ein:$kernel-running kernel)
-    (ein:query-singleton-ajax
-     (list 'kernel-start (ein:$kernel-kernel-id kernel))
-     (concat (ein:url (ein:$kernel-url-or-port kernel)
-                      (ein:$kernel-base-url kernel))
-             "?" (format "notebook=%s" notebook-id))
-     :type "POST"
-     :parser #'ein:json-read
-     :success (cons #'ein:kernel--kernel-started kernel))))
+  (run-with-idle-timer
+   0.5 nil
+   (lambda (kernel notebook-id)
+     (unless (ein:$kernel-running kernel)
+       (ein:query-singleton-ajax
+        (list 'kernel-start (ein:$kernel-kernel-id kernel))
+        (concat (ein:url (ein:$kernel-url-or-port kernel)
+                         (ein:$kernel-base-url kernel))
+                "?" (format "notebook=%s" notebook-id))
+        :type "POST"
+        :parser #'ein:json-read
+        :success (cons #'ein:kernel--kernel-started kernel))))
+   kernel notebook-id))
 
 
 (defun ein:kernel-restart (kernel)
