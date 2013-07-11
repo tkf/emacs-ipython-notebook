@@ -59,6 +59,7 @@
 
 (make-obsolete-variable 'ein:notebook-discard-output-on-save nil "0.2.0")
 
+;;;###autoload
 (defcustom ein:notebook-discard-output-on-save 'no
   "Configure if the output part of the cell should be saved or not.
 
@@ -94,6 +95,7 @@ a function
 ;; As opening/saving notebook treats possibly huge data, define these
 ;; timeouts separately:
 
+;;;###autoload
 (defcustom ein:notebook-querty-timeout-open (* 60 1000) ; 1 min
   "Query timeout for opening notebook.
 If you cannot open large notebook because of timeout error, try
@@ -104,6 +106,7 @@ global setting.  For global setting and more information, see
                  (const :tag "Use global setting" nil))
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:notebook-querty-timeout-save (* 60 1000) ; 1 min
   "Query timeout for saving notebook.
 Similar to `ein:notebook-querty-timeout-open', but for saving
@@ -113,6 +116,7 @@ notebook.  For global setting and more information, see
                  (const :tag "Use global setting" nil))
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:helm-kernel-history-search-key nil
   "Bind `helm-ein-kernel-history' to this key in notebook mode.
 
@@ -124,6 +128,7 @@ This key will be installed in the `ein:notebook-mode-map'."
   :type 'boolean
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:anything-kernel-history-search-key nil
   "Bind `anything-ein-kernel-history' to this key in notebook mode.
 
@@ -135,6 +140,7 @@ This key will be installed in the `ein:notebook-mode-map'."
   :type 'boolean
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:notebook-set-buffer-file-name nil
   "[EXPERIMENTAL] Set `buffer-file-name' of notebook buffer."
   :type 'boolean
@@ -1035,6 +1041,7 @@ associated with current buffer (if any)."
 
 ;;; Notebook mode
 
+;;;###autoload
 (defcustom ein:notebook-modes
   '(ein:notebook-multilang-mode)
   "Notebook modes to use \(in order of preference).
@@ -1070,6 +1077,7 @@ Use simple `python-mode' based notebook mode when MuMaMo is not installed::
                          (const :tag "Plain" ein:notebook-plain-mode)))
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:notebook-mode-hook nil
   "Hook for `ein:notebook-mode'.
 This hook is run regardless the actual major mode used."
@@ -1341,6 +1349,7 @@ the first argument and CBARGS as the rest of arguments."
 
 ;;; Buffer and kill hooks
 
+;;;###autoload
 (defcustom ein:notebook-kill-buffer-ask t
   "Whether EIN should ask before killing unsaved notebook buffer."
   :type '(choice (const :tag "Yes" t)

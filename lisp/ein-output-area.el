@@ -78,6 +78,7 @@ when REPLACE-P returns non-`nil'."
     #'ein:insert-html-shr)
    (t #'ein:insert-read-only)))
 
+;;;###autoload
 (defcustom ein:shr-env
   '((shr-table-horizontal-line ?-)
     (shr-table-vertical-line ?|)

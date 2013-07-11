@@ -32,6 +32,7 @@
 (define-obsolete-variable-alias 'ein:scratch-notebook-name-template
   'ein:junk-notebook-name-template "0.2.0")
 
+;;;###autoload
 (defcustom ein:junk-notebook-name-template "junk-%Y-%m-%d-%H%M%S"
   "Junk notebook name template.
 This value is used from `ein:notebooklist-new-scratch-notebook'

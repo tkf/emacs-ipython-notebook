@@ -45,6 +45,7 @@ If OTHER-WINDOW is non-`nil', open the file in the other window."
            (marker-buffer marker))
   (goto-char marker))
 
+;;;###autoload
 (defcustom ein:propagate-connect t
   "Set to `t' to connect to the notebook after jumping to a buffer."
   :type '(choice (const :tag "Yes" t)

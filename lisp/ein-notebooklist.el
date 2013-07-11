@@ -32,6 +32,7 @@
 (require 'ein-notebook)
 (require 'ein-subpackages)
 
+;;;###autoload
 (defcustom ein:notebooklist-first-open-hook nil
   "Hooks to run when the notebook list is opened at first time.
 

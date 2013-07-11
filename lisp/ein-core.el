@@ -49,6 +49,7 @@
 
 ;;; Configuration
 
+;;;###autoload
 (defcustom ein:url-or-port '(8888)
   "List of default url-or-port values.
 This will be used for completion. So put your IPython servers.
@@ -58,6 +59,7 @@ to type every time)."
                          (string :tag "URL" "http://127.0.0.1:8888")))
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:default-url-or-port nil
   "Default URL or port.  This should be your main IPython
 Notebook server."
@@ -66,6 +68,7 @@ Notebook server."
                  (const :tag "First value of `ein:url-or-port'" nil))
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:filename-translations nil
   "Convert file paths between Emacs and Python process.
 

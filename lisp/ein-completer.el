@@ -106,6 +106,7 @@
                  ((ein:kernel-live-p kernel)))
     (ein:completer-complete kernel :expand nil)))
 
+;;;###autoload
 (defcustom ein:complete-on-dot t
   "Start completion when inserting a dot.  Note that
 `ein:use-auto-complete' (or `ein:use-auto-complete-superpack')

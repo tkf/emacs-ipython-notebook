@@ -27,6 +27,7 @@
 
 (require 'ein-worksheet)
 
+;;;###autoload
 (defcustom ein:iexec-delay 0.3
   "Delay before executing cell after change in second."
   :type 'number

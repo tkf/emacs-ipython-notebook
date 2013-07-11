@@ -51,6 +51,7 @@
 
 ;;; Configuration
 
+;;;###autoload
 (defcustom ein:console-security-dir ""
   "Security directory setting.
 
@@ -83,6 +84,7 @@ function
                               url-or-port))))
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:console-executable (executable-find "ipython")
   "IPython executable used for console.
 
@@ -101,6 +103,7 @@ Types same as `ein:console-security-dir' are valid."
                     (lambda (url-or-port) (executable-find "ipython"))))
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:console-args '("--profile" "nbserver")
   "Additional argument when using console.
 

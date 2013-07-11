@@ -62,6 +62,7 @@ of OPTION:
 
 ;;; Configuration
 
+;;;###autoload
 (defcustom ein:connect-run-command "%run"
   "``%run`` magic command used for `ein:connect-run-buffer'.
 Types same as `ein:console-security-dir' are valid."
@@ -77,6 +78,7 @@ Types same as `ein:console-security-dir' are valid."
                     (lambda (url-or-port) (format "%%run -n -i -t -d"))))
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:connect-reload-command "%run -n"
   "Setting for `ein:connect-reload-buffer'.
 Same as `ein:connect-run-command'."
@@ -96,6 +98,7 @@ Same as `ein:connect-run-command'."
   (ein:choose-setting 'ein:connect-run-command
                       (ein:$notebook-url-or-port (ein:connect-get-notebook))))
 
+;;;###autoload
 (defcustom ein:connect-save-before-run 'yes
   "Whether the buffer should be saved before `ein:connect-run-buffer'."
   :type '(choice (const :tag "Always save buffer" yes)
@@ -103,6 +106,7 @@ Same as `ein:connect-run-command'."
                  (const :tag "Ask" ask))
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:connect-aotoexec-lighter nil
   "String appended to the lighter of `ein:connect-mode' (`ein:c')
 when auto-execution mode is on.  When `nil', use the same string
@@ -111,6 +115,7 @@ as `ein:cell-autoexec-prompt'."
                  (const :tag "Use `ein:cell-autoexec-prompt'." nil))
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:connect-default-notebook nil
   "Notebook to be connect when `ein:connect-to-default-notebook' is called.
 

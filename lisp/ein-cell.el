@@ -109,6 +109,7 @@
 
 ;;; Customization
 
+;;;###autoload
 (defcustom ein:cell-traceback-level 1
   "Number of traceback stack to show.
 Hidden tracebacks are not discarded.  You can always view them
@@ -117,6 +118,7 @@ using the command `ein:notebook-view-traceback'."
                  (const :tag "Show all traceback" nil))
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:cell-max-num-outputs nil
   "Number of maximum outputs to be shown by default.
 To view full output, use `ein:notebook-show-in-shared-output'."
@@ -124,12 +126,14 @@ To view full output, use `ein:notebook-show-in-shared-output'."
                  (const :tag "Show all traceback" nil))
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:cell-autoexec-prompt "⚡"
   "String shown in the cell prompt when the auto-execution flag
 is on.  See also `ein:connect-aotoexec-lighter'."
   :type 'string
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:slice-image nil
   "[EXPERIMENTAL] When non-`nil', use `insert-sliced-image' when
 drawing images.  If it is of the form of ``(ROWS COLS)``, it is
@@ -850,6 +854,7 @@ Called from ewoc pretty printer via `ein:cell-insert-output'."
   (ein:cell-append-mime-type json (oref cell :dynamic))
   (ein:insert-read-only "\n"))
 
+;;;###autoload
 (defcustom ein:output-type-preference
   (if (and (fboundp 'shr-insert-document)
            (fboundp 'libxml-parse-xml-region))

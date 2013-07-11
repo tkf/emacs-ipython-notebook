@@ -57,6 +57,7 @@
 
 ;;; History search
 
+;;;###autoload
 (defcustom ein:helm-kernel-history-search-auto-pattern t
   "Automatically construct search pattern when non-`nil'.
 

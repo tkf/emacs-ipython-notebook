@@ -33,41 +33,49 @@
 
 ;;; Customization
 
+;;;###autoload
 (defcustom ein:mumamo-codecell-mode 'python-mode
   "Major Mode for Code Cell."
   :type '(symbol :tag "Major Mode")
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:mumamo-textcell-mode 'text-mode
   "Major Mode for Text Cell."
   :type '(symbol :tag "Major Mode")
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:mumamo-htmlcell-mode 'html-mode
   "Major Mode for HTML Cell."
   :type '(symbol :tag "Major Mode")
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:mumamo-markdowncell-mode 'markdown-mode
   "Major Mode for Markdown Cell."
   :type '(symbol :tag "Major Mode")
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:mumamo-rawcell-mode 'rst-mode
   "Major Mode for Raw Cell."
   :type '(symbol :tag "Major Mode")
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:mumamo-headingcell-mode 'text-mode
   "Major Mode for Heading Cell."
   :type '(symbol :tag "Major Mode")
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:mumamo-fallback-mode 'text-mode
   "Fallback Major Mode."
   :type '(symbol :tag "Major Mode")
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:use-mumamo-indent-line-function-workaround t
   "Turn on workaround for `mumamo-indent-line-function'.
 
@@ -84,6 +92,7 @@ problem."
   :type 'boolean
   :group 'ein)
 
+;;;###autoload
 (defcustom ein:mumamo-indent-line-function-dummy-code "
 def ein_dummy():
     return"

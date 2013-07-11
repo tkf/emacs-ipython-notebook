@@ -41,6 +41,7 @@
 
 ;;; Variables
 
+;;;###autoload
 (defcustom ein:query-timeout
   (if (eq request-backend 'url-retrieve) 1000 nil)
   "Default query timeout for HTTP access in millisecond.
