@@ -176,11 +176,14 @@ See: https://github.com/ipython/ipython/pull/3307"
   The kernel will no longer be responsive.")))
 
 
-(defun ein:kernel-send-cookie (channel host)
+(defun ein:kernel-send-cookie (channel kernel)
   ;; cookie can be an empty string for IPython server with no password,
   ;; but something must be sent to start channel.
-  (let ((cookie (ein:query-get-cookie host "/")))
-    (ein:websocket-send channel cookie)))
+  (let* ((url-or-port (ein:$kernel-url-or-port kernel))
+         (host (if (stringp url-or-port) url-or-port ein:url-localhost))
+         (cookie (ein:query-get-cookie host "/"))
+         (session-id (ein:$kernel-session-id kernel)))
+    (ein:websocket-send channel (format "%s:%s" session-id cookie))))
 
 
 (defun ein:kernel--ws-closed-callback (websocket kernel arg)
@@ -214,14 +217,9 @@ See: https://github.com/ipython/ipython/pull/3307"
             do (setf (ein:$websocket-onclose-args c) (list kernel onclose-arg))
             do (setf (ein:$websocket-onopen c)
                      (lexical-let ((channel c)
-                                   (kernel kernel)
-                                   (host (let (url-or-port
-                                               (ein:$kernel-url-or-port kernel))
-                                           (if (stringp url-or-port)
-                                               url-or-port
-                                             ein:url-localhost))))
+                                   (kernel kernel))
                        (lambda ()
-                         (ein:kernel-send-cookie channel host)
+                         (ein:kernel-send-cookie channel kernel)
                          ;; run `ein:$kernel-after-start-hook' if both
                          ;; channels are ready.
                          (when (ein:kernel-live-p kernel)
