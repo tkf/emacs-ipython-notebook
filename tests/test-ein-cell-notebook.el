@@ -4,34 +4,13 @@
 (require 'ert)
 
 (require 'ein-notebook)
-(require 'test-ein-notebook)
-
-
-;; Test utils
-
-(defmacro eintest:with-one-cell (cell-type &rest body)
-  "Insert new cell of CELL-TYPE in a clean notebook and execute BODY.
-The new cell is bound to a variable `cell'."
-  (declare (indent 1))
-  `(with-current-buffer (eintest:notebook-make-empty)
-     (let ((cell (ein:notebook-insert-cell-below ein:notebook ,cell-type nil)))
-       (ein:cell-goto cell)
-       ,@body)))
-
-(defvar eintest:example-svg "\
-<?xml version=\"1.0\" standalone=\"no\"?>
-<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"
- \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">
-
-<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">
-  <circle cx=\"100\" cy=\"50\" r=\"40\" />
-</svg>")
+(require 'ein-testing-notebook)
 
 
 ;; ein:cell-location
 
 (ert-deftest ein:cell-location-codecell-prompt-beg ()
-  (eintest:with-one-cell 'code
+  (ein:testing-with-one-cell 'code
     (should (equal (marker-position (ein:cell-location cell :prompt))
                    (save-excursion
                      (goto-char (point-max))
@@ -39,18 +18,18 @@ The new cell is bound to a variable `cell'."
                      (point))))))
 
 (ert-deftest ein:cell-location-codecell-prompt-end ()
-  (eintest:with-one-cell 'code
+  (ein:testing-with-one-cell 'code
     (should (equal (marker-position (ein:cell-location cell :prompt t))
                    (1- (point))))))
 
 (ert-deftest ein:cell-location-codecell-input-beg ()
-  (eintest:with-one-cell 'code
+  (ein:testing-with-one-cell 'code
     (insert "some text")
     (should (equal (marker-position (ein:cell-location cell :input))
                    (1- (point-at-bol))))))
 
 (ert-deftest ein:cell-location-codecell-input-end ()
-  (eintest:with-one-cell 'code
+  (ein:testing-with-one-cell 'code
     (insert "some text")
     (should (equal (marker-position (ein:cell-location cell :input t))
                    (1+ (point))))))
@@ -59,12 +38,12 @@ The new cell is bound to a variable `cell'."
 ;; from-json
 
 (ert-deftest eintest:cell-input-prompt-number ()
-  (eintest:with-one-cell
+  (ein:testing-with-one-cell
       (ein:cell-from-json
        (list :cell_type "code"
              :input "some input"
              :prompt_number 111)
-       :ewoc (ein:$notebook-ewoc ein:notebook))
+       :ewoc (oref ein:%worksheet% :ewoc))
     (goto-char (ein:cell-location cell))
     (should (looking-at "\
 In \\[111\\]:
@@ -72,12 +51,12 @@ some input
 "))))
 
 (ert-deftest eintest:cell-input-prompt-star ()
-  (eintest:with-one-cell
+  (ein:testing-with-one-cell
       (ein:cell-from-json
        (list :cell_type "code"
              :input "some input"
              :prompt_number "*")
-       :ewoc (ein:$notebook-ewoc ein:notebook))
+       :ewoc (oref ein:%worksheet% :ewoc))
     (goto-char (ein:cell-location cell))
     (should (looking-at "\
 In \\[\\*\\]:
@@ -85,11 +64,11 @@ some input
 "))))
 
 (ert-deftest eintest:cell-input-prompt-empty ()
-  (eintest:with-one-cell
+  (ein:testing-with-one-cell
       (ein:cell-from-json
        (list :cell_type "code"
              :input "some input")
-       :ewoc (ein:$notebook-ewoc ein:notebook))
+       :ewoc (oref ein:%worksheet% :ewoc))
     (goto-char (ein:cell-location cell))
     (should (looking-at "\
 In \\[ \\]:
@@ -100,18 +79,20 @@ some input
 ;; Insert pyout/display_data
 
 (defun eintest:cell-insert-output (outputs regexp)
-  (eintest:with-one-cell
-      (ein:cell-from-json
-       (list :cell_type "code"
-             :outputs outputs
-             :input "some input"
-             :prompt_number 111)
-       :ewoc (ein:$notebook-ewoc ein:notebook))
-    (goto-char (ein:cell-location cell))
-    (should (looking-at (format "\
+  (let ((ein:output-type-preference
+         '(emacs-lisp svg png jpeg text html latex javascript)))
+    (ein:testing-with-one-cell
+        (ein:cell-from-json
+         (list :cell_type "code"
+               :outputs outputs
+               :input "some input"
+               :prompt_number 111)
+         :ewoc (oref ein:%worksheet% :ewoc))
+      (goto-char (ein:cell-location cell))
+      (should (looking-at (format "\
 In \\[111\\]:
 some input
-%s" regexp)))))
+%s" regexp))))))
 
 (defmacro eintest:gene-test-cell-insert-output-pyout-and-display-data
   (name regexps outputs)
@@ -150,12 +131,13 @@ some input
 (eintest:gene-test-cell-insert-output-pyout-and-display-data
   latex
   ("some output \\\\LaTeX")
-  ((:text "some output text" :latex "some output \\LaTeX")))
+  ((:latex "some output \\LaTeX")))
 
-(eintest:gene-test-cell-insert-output-pyout-and-display-data
-  svg
-  (" ")
-  ((:text "some output text" :svg eintest:example-svg)))
+(when (image-type-available-p 'svg)
+  (eintest:gene-test-cell-insert-output-pyout-and-display-data
+   svg
+   (" ")
+   ((:text "some output text" :svg ein:testing-example-svg))))
 
 (eintest:gene-test-cell-insert-output-pyout-and-display-data
   html
@@ -178,12 +160,13 @@ some input
   ((:text "first output text")
    (:text "second output text" :javascript "$.do.something()")))
 
-(eintest:gene-test-cell-insert-output-pyout-and-display-data
-  text-latex-svg
-  ("first output text" "second output \\\\LaTeX" " ")
-  ((:text "first output text")
-   (:text "some output text" :latex "second output \\LaTeX")
-   (:text "some output text" :svg eintest:example-svg)))
+(when (image-type-available-p 'svg)
+  (eintest:gene-test-cell-insert-output-pyout-and-display-data
+   text-latex-svg
+   ("first output text" "second output \\\\LaTeX" " ")
+   ((:text "first output text")
+    (:latex "second output \\LaTeX")
+    (:text "some output text" :svg ein:testing-example-svg))))
 
 
 ;; Insert pyerr

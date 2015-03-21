@@ -1,6 +1,7 @@
 (eval-when-compile (require 'cl))
 (require 'ert)
 
+(require 'ein)  ; for `ein:version'
 (require 'ein-utils)
 
 (ert-deftest ein-url-simple ()
@@ -80,3 +81,102 @@ def func():
 
 "))
     (should (equal (ein:trim-indent original) trimmed))))
+
+
+;;; Text manipulation on buffer
+
+(ert-deftest ein:find-leftmot-column-simple-cases ()
+  (loop for (indent text) in
+        '(;; No indent
+          (0 "\
+def f():
+    pass")
+          ;; Indented python code
+          (4 "\
+    def f():
+        pass")
+          ;; Deeper indent can come first
+          (4 "\
+        # indent = 8
+    # indent 4")
+          ;; With empty lines
+          (4 "\
+
+        # indent = 8
+
+    # indent 4
+
+")
+          )
+        do (with-temp-buffer
+             (insert text)
+             (should (= (ein:find-leftmot-column (point-min) (point-max))
+                        indent)))))
+
+
+;;; Misc
+
+(ert-deftest ein:list-insert-after ()
+  (should (equal (ein:list-insert-after '(a) 'a 'X) '(a X)))
+  (should (equal (ein:list-insert-after '(a b c) 'a 'X) '(a X b c)))
+  (should (equal (ein:list-insert-after '(a b c) 'b 'X) '(a b X c)))
+  (should (equal (ein:list-insert-after '(a b c) 'c 'X) '(a b c X)))
+  (should-error  (ein:list-insert-after '(a b c) 'd 'X)))
+
+(ert-deftest ein:list-insert-before ()
+  (should (equal (ein:list-insert-before '(a) 'a 'X) '(X a)))
+  (should (equal (ein:list-insert-before '(a b c) 'a 'X) '(X a b c)))
+  (should (equal (ein:list-insert-before '(a b c) 'b 'X) '(a X b c)))
+  (should (equal (ein:list-insert-before '(a b c) 'c 'X) '(a b X c)))
+  (should-error  (ein:list-insert-before '(a b c) 'd 'X)))
+
+(ert-deftest ein:list-move-left ()
+  (should (equal (ein:list-move-left '(a) 'a) '(a)))
+  (should (equal (ein:list-move-left '(a b) 'a) '(b a)))
+  (should (equal (ein:list-move-left '(a b) 'b) '(b a)))
+  (should (equal (ein:list-move-left '(a b c d) 'a) '(b c d a)))
+  (should (equal (ein:list-move-left '(a b c d) 'b) '(b a c d)))
+  (should (equal (ein:list-move-left '(a b c d) 'c) '(a c b d)))
+  (should (equal (ein:list-move-left '(a b c d) 'd) '(a b d c)))
+  (should-error  (ein:list-move-left '(a b c d) 'X)))
+
+(ert-deftest ein:list-move-right ()
+  (should (equal (ein:list-move-right '(a) 'a) '(a)))
+  (should (equal (ein:list-move-right '(a b) 'a) '(b a)))
+  (should (equal (ein:list-move-right '(a b) 'b) '(b a)))
+  (should (equal (ein:list-move-right '(a b c d) 'a) '(b a c d)))
+  (should (equal (ein:list-move-right '(a b c d) 'b) '(a c b d)))
+  (should (equal (ein:list-move-right '(a b c d) 'c) '(a b d c)))
+  (should (equal (ein:list-move-right '(a b c d) 'd) '(d a b c)))
+  (should-error  (ein:list-move-right '(a b c d) 'X)))
+
+(defun ein:testing-choose-setting-should-equal
+  (setting value desired &optional single-p)
+  (let ((setting setting))
+    (should (equal (ein:choose-setting 'setting value single-p) desired))))
+
+(ert-deftest ein:choose-setting-single-string ()
+  (let ((test 'ein:testing-choose-setting-should-equal))
+    (funcall test "a" nil "a")
+    (funcall test "a" 'whatever "a")))
+
+(ert-deftest ein:choose-setting-single-int ()
+  (let ((test #'ein:testing-choose-setting-should-equal))
+    (funcall test 1 nil 1 #'integerp)
+    (funcall test 1 'whatever 1 #'integerp)))
+
+(ert-deftest ein:choose-setting-alist ()
+  (let* ((test (lambda (&rest args)
+                 (apply #'ein:testing-choose-setting-should-equal
+                        '(("a" . 1) ("b" . 2) ("c" . 3))
+                        args))))
+    (funcall test "a" 1)
+    (funcall test "b" 2)))
+
+(ert-deftest ein:choose-setting-func ()
+  (let* ((test (lambda (&rest args)
+                 (apply #'ein:testing-choose-setting-should-equal
+                        (lambda (x) 1)
+                        args))))
+    (funcall test nil 1)
+    (funcall test 'whatever 1)))
